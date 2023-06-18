@@ -1,0 +1,83 @@
+# The name of the project (required) is used for display purposes within IO environments and IDEs.
+name: flutter-microapps-template
+
+# A list of paths to local packages that are included in the Melos workspace. Each entry can be a specific path or a glob pattern.
+packages:
+  - "plugins/**"
+  - "microapps/**"
+
+# Recommended option for projects with Dart 2.17.0 or greater.
+#
+# This enables a new mechanism for linking local packages, which integrates
+# better with other tooling (e.g. dart tool, Flutter tool, IDE plugins) than the
+# mechanism currently being used by default. Please read the documentation for
+# usePubspecOverrides before enabling this feature.
+#
+# See https://melos.invertase.dev/getting-started#setup
+command:
+  bootstrap:
+    usePubspecOverrides: true
+
+scripts:
+  analyze:
+    run: melos exec --fail-fast -- "flutter analyze --no-fatal-infos --no-fatal-warnings"
+    description: Run `flutter analyze` in all packages
+
+  clean:
+    run: melos exec -- "flutter clean"
+    description: Run `flutter clean` in all packages
+
+  format:
+    run: melos exec -- "flutter format . --set-exit-if-changed"
+    description: Run `flutter format .` in all packages
+
+  fix-apply:
+    run: melos exec -- "dart fix --apply & flutter format . --set-exit-if-changed"
+    description: Run `dart fix --apply & format` in all packages
+
+  fix-dry:
+    run: melos exec -- "dart fix --dry-run"
+    description: Run `dart fix --dry-run` in all packagesf
+
+  test:
+    # Only run the test command when the package has a test directory
+    run: melos exec --dir-exists=test -- "flutter test"
+    description: Run `flutter test` in all packages
+
+  test-fail_fast:
+    run: melos exec --dir-exists=test --fail-fast -- flutter test
+    description: Run `flutter test` in all packages. Terminate the command if a test fails
+
+  gen_coverage:
+    run: |
+      melos exec -- "flutter test --coverage"
+      melos exec -c 1 -- "\$MELOS_ROOT_PATH/combine_coverage.sh"
+    description: Generates an HTML code coverage report
+
+  generate:watch:
+    run: melos run generate:watch:dart && melos run generate:watch:flutter
+    description: Build and watch all generated files for Dart & Flutter packages in this project.
+
+  generate:watch:dart:
+    run: melos exec --fail-fast --depends-on="build_runner" --no-flutter -- "dart run build_runner watch --delete-conflicting-outputs"
+    description: Build and watch generated files for Dart packages in this project.
+
+  generate:watch:flutter:
+    run: melos exec --fail-fast --depends-on="build_runner" --flutter -- "flutter pub run build_runner watch --delete-conflicting-outputs"
+    description: Build all generated files for Flutter packages in this project.
+
+  generate:build:flutter:
+    run: melos exec --fail-fast --depends-on="build_runner" --flutter -- "flutter pub run build_runner build --delete-conflicting-outputs"
+    description: Build all generated files for Flutter packages in this project.
+
+  cache_repair:
+    run: melos exec -- "flutter pub cache repair"
+    description: Repair all pub caches
+
+  upgrade_packages:
+    run: melos exec -- "flutter packages upgrade"
+    description: Upgrade all pub caches without changing pubspec it will obey '^' rules
+
+  upgrade_packages_major:
+    run: melos exec -- "flutter pub upgrade --major-versions"
+    description: Upgrade all pub caches updating the pubspec
