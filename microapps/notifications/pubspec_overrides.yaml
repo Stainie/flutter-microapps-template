@@ -1,0 +1,25 @@
+# melos_managed_dependency_overrides: firebase_core_platform_interface,content,crashlytics,dependency_injection,design_system,http_abstraction,linting,local_storage,push_notifications,reactifier,result,microapp
+dependency_overrides:
+  firebase_core_platform_interface: 4.5.1
+  content:
+    path: ../../plugins/content
+  crashlytics:
+    path: ../../plugins/crashlytics
+  dependency_injection:
+    path: ../../plugins/dependency_injection
+  design_system:
+    path: ../../plugins/design_system
+  http_abstraction:
+    path: ../../plugins/http_abstraction
+  linting:
+    path: ../../plugins/linting
+  local_storage:
+    path: ../../plugins/local_storage
+  push_notifications:
+    path: ../../plugins/push_notifications
+  reactifier:
+    path: ../../plugins/reactifier
+  result:
+    path: ../../plugins/result
+  microapp:
+    path: ../../plugins/microapp

@@ -1,0 +1,12 @@
+# melos_managed_dependency_overrides: crashlytics,http_abstraction,linting,local_storage,result
+dependency_overrides:
+  crashlytics:
+    path: ../crashlytics
+  http_abstraction:
+    path: ../http_abstraction
+  linting:
+    path: ../linting
+  local_storage:
+    path: ../local_storage
+  result:
+    path: ../result
