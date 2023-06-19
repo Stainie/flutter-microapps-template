@@ -1,0 +1,7 @@
+# melos_managed_dependency_overrides: test_api,linting,result
+dependency_overrides:
+  test_api: 0.4.18
+  linting:
+    path: ../linting
+  result:
+    path: ../result
