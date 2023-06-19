@@ -1,0 +1,5 @@
+{
+    "yaml.schemas": {
+        "https://json.schemastore.org/yamllint.json": "file:///Users/stankokostic/Documents/projects/flutter-microapps-template/plugins/linting/lib/global_code_style_rules.yaml"
+    }
+}

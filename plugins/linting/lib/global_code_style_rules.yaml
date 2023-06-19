@@ -1,0 +1,1496 @@
+# For more information about specific linter rules, see:
+# https://dart-lang.github.io/linter/lints/index.html
+
+linter:
+  rules:
+    # ========================== #
+    #       ERROR    RULES       #
+    # ========================== #
+
+    # DON'T force usage of package imports.
+    # It's okay to use relative imports for the same package.
+    # ```dart
+    # import 'package:xyz/abc.dart' // <-- OK
+    # import 'xyz/abc.dart' // <-- OK
+    # ```
+    always_use_package_imports: true
+
+    # DO avoid dynamic calls.
+    # ```dart
+    # void func(dynamic test) {
+    #   test(); // <- LINT
+    #   test.response; // <- LINT
+    #   if (test is Whatever) {
+    #     test.whatever; // <- OK
+    #   }
+    # }
+    # ```
+    avoid_dynamic_calls: true
+
+    # DO avoid empty else statement.
+    # ```dart
+    # if (test) {
+    #   // ...
+    # } else ; // <- LINT
+    # ```
+    avoid_empty_else: true
+
+    # DON'T avoid print statements in production code.
+    # We accept print statements in production code, but we don't want to
+    # encourage them. Prefer using the analytics library instead.
+    # ```dart
+    # print('Hello World!'); // <- OK
+    # ```
+    avoid_print: true
+
+    # DO avoid `lib/` in imports. This is confusing.
+    # ```dart
+    # import 'abc.dart' // <- OK
+    # import '../lib/abc.dart' // <- LINT
+    # ```
+    avoid_relative_lib_imports: true
+
+    # DO avoid returning null for futures.
+    # Developer probably forgot to mark function `async`.
+    avoid_returning_null_for_future: true
+
+    # DO avoid the following methods because they are slow.
+    # - Directory.exists
+    # - Directory.stat
+    # - File.lastModified
+    # - File.exists
+    # - File.stat
+    # - FileSystemEntity.isDirectory
+    # - FileSystemEntity.isFile
+    # - FileSystemEntity.isLink
+    # - FileSystemEntity.type
+    avoid_slow_async_io: true
+
+    # DO avoid .toString() on runtime types because production obfuscation
+    # might change the result.
+    # ```dart
+    # void func(Whatever test) {
+    #   if (test.runtimeType.toString() == 'Whatever') { ... } // <- LINT
+    #   if (test is Whatever) { ... } // <- OK
+    # }
+    # ```
+    avoid_type_to_string: true
+
+    # DO avoid using types as parameter names.
+    # Not sure exactly what it does,
+    # though it's in the Flutter recomended lints.
+    # https://dart-lang.github.io/linter/lints/avoid_types_as_parameter_names.html
+    avoid_types_as_parameter_names: true
+
+    # DO avoid using web-only libraries outside Flutter web plugin packages.
+    avoid_web_libraries_in_flutter: true
+
+    # DO cancel instances of `dart.async.StreamSubscription`.
+    cancel_subscriptions: true
+
+    # DO close instances of `dart.core.Sink`.
+    close_sinks: true
+
+    # DO disallow wrong type arguments for collection methods.
+    # ```dart
+    # void func(List<int> test) {
+    #   test.add(''); // <- LINT
+    #   test.add(1); // <- OK
+    # }
+    # ```
+    collection_methods_unrelated_type: true
+    iterable_contains_unrelated_type: true
+    list_remove_unrelated_type: true
+
+    # DO avoid referencing unknown identfiers in comments
+    # ```dart
+    # /// Return true if [value] is larger than [outOfScopeId]. // <- LINT
+    # bool isOutOfRange(int value) { ... }
+    # ```
+    comment_references: true
+
+    # DO avoid control flow leaving finally blocks.
+    # Using control flow in finally blocks will inevitably cause
+    # unexpected behavior that is hard to debug.
+    # ```dart
+    # try ... catch ...
+    # finally {
+    #   print(); // <- OK
+    #   return; // <- LINT
+    #   break; // <- LINT
+    # }
+    # ```
+    control_flow_in_finally: true
+
+    # DO reference all class properties when overriding debugFillProperties().
+    # This is important for debuggability, especially for Widgets.
+    # All properties of the class should be included in debugFillProperties()
+    # as well.
+    # https://dart-lang.github.io/linter/lints/diagnostic_describe_all_properties.html
+    diagnostic_describe_all_properties: true
+
+    # DO allow fire-and-forget of future methods.
+    # This is useful when queueing future asynchronous work from a non-async function.
+    # ```dart
+    # Future<void> asyncFunc() async { ... }
+    # void func() {
+    #   asyncFunc(); // <- OK
+    #   await asyncFunc(); // <- OK
+    # }
+    # ```
+    discarded_futures: false
+
+    # DON'T allow empty statements.
+    # ```dart
+    # if (test) ; // <- LINT
+    # ```
+    empty_statements: true
+
+    # DO override hashCode if overriding == and prefer overriding == if
+    # overriding hashCode.
+    # Every object in Dart has a hashCode. Both the == operator and the hashCode
+    # property of objects must be consistent in order for a common hash map
+    # implementation to function properly. Thus, when overriding ==, the
+    # hashCode should also be overridden to maintain consistency. Similarly,
+    # if hashCode is overridden, == should be also.
+    hash_and_equals: true
+
+    # DON'T allow using literals in boolean expressions.
+    # ```dart
+    # if (true) { ... } // <- LINT
+    # if (false || true && whatever) { ... } // <- LINT
+    # if (whatever) { ... } // <- OK
+    # ```
+    literal_only_boolean_expressions: true
+
+    # DON'T use adjacent strings in list.
+    # This can be sign of forgotten comma.
+    no_adjacent_strings_in_list: true
+
+    # DON'T use more than one case with same value.
+    # This is usually a typo or changed value of constant.
+    no_duplicate_case_values: true
+
+    # DON'T allow logic in createState().
+    no_logic_in_create_state: true
+
+    # DON'T prefer to use relative imports in the same package.
+    # Use absolute imports always.
+    # ```dart
+    # import 'abc.dart' // <- OK
+    # import 'this_package:abc.dart' // <- OK
+    # ```
+    prefer_relative_imports: false
+
+    # DO prefer to use `void` instead of `Null`.
+    prefer_void_to_null: true
+
+    # DO test type arguments in operator ==(Object other).
+    # Not testing types might result in null pointer exceptions which will be
+    # unexpected for consumers of your class.
+    # ```dart
+    # @override
+    # bool operator ==(Object other) {
+    #   Whatever badOther = other as Whatever; // LINT
+    #   if (other == null || other is! Whatever) return false; // <- OK
+    # }
+    # ```
+    test_types_in_equals: true
+
+    # DO avoid using `throw` in `finally` blocks.
+    throw_in_finally: true
+
+    # DO avoid unnecessary statements.
+    # myvar; // <- LINT
+    # list.clear; // <- LINT
+    # 1 + 2; // <- LINT
+    # methodOne() + methodTwo(); // <- LINT
+    # foo ? bar : baz; // <- LINT
+    # some.method(); // <- OK
+    # const SomeClass(); // <- OK
+    # methodOne(); // <- OK
+    # methodTwo(); // <- OK
+    # foo ? bar() : baz(); // <- OK
+    # return myvar; // <- OK
+    unnecessary_statements: true
+
+    # DON'T compare references of unrelated types for equality.
+    # ```dart
+    # 'A' == 4 // <- LINT
+    # ```
+    unrelated_type_equality_checks: true
+
+    # DO avoid using unsafe HTML APIs.
+    # - assigning directly to the href field of an AnchorElement
+    # - assigning directly to the src field of an EmbedElement, IFrameElement, or ScriptElement
+    # - assigning directly to the srcdoc field of an IFrameElement
+    # - calling the createFragment method of Element
+    # - calling the open method of Window
+    # - calling the setInnerHtml method of Element
+    # - calling the Element.html constructor
+    # - calling the DocumentFragment.html constructor
+    unsafe_html: true
+
+    # DON'T use BuildContext across asynchronous gaps.
+    # Storing BuildContext for later usage can easily lead to difficult to
+    # diagnose crashes. Asynchronous gaps are implicitly storing BuildContext
+    # and are some of the easiest to overlook when writing code.
+    #
+    # When a BuildContext is used, its mounted property must be checked after
+    # an asynchronous gap.
+    #
+    # ```dart
+    # void onButtonTapped(BuildContext context) async { // <- LINT
+    #   await Future.delayed(const Duration(seconds: 1));
+    #   Navigator.of(context).pop();
+    # }
+    #
+    # void onButtonTapped(BuildContext context) { ... } // <- OK
+    #
+    # void onButtonTapped() async {
+    #   await Future.delayed(const Duration(seconds: 1));
+    #   if (!context.mounted) return; <- OK
+    #   Navigator.of(context).pop();
+    # }
+    # ```
+    use_build_context_synchronously: true
+
+    # DO use key in widget constructors.
+    # It's a good practice to expose the ability to provide a key when
+    # creating public widgets.
+    # ```dart
+    # class MyPublicWidget extends StatelessWidget {} // <- LINT
+    # class MyPublicWidget extends StatelessWidget { // <- OK
+    #   MyPublicWidget({super.key});
+    # }
+    # ```
+    use_key_in_widget_constructors: true
+
+    # DO use valid regular expression syntax when creating regular expression
+    # instances.
+    # Regular expressions created with invalid syntax will throw a
+    # FormatException at runtime so should be avoided.
+    valid_regexps: true
+
+    # ========================== #
+    #       STYLE    RULES       #
+    # ========================== #
+
+    # DO always declare return types for functions.
+    # ```dart
+    # int add(int a, int b) => a + b; // <- OK
+    # add(int a, int b) => a + b; // <- LINT
+    # ```
+    always_declare_return_types: true
+
+    # DO allow libraries without documentation.
+    # Documentation is highly recommended, however.
+    # ```dart
+    # /// This is a library.
+    # library my_library; // <- OK
+    #
+    # library my_library; // <- OK, but not recommended
+    # ```
+    unnecessary_library_directive: false
+
+    # DON'T allow putting control statement bodies on the same line.
+    # This only applies to if-statements, not to if-expressions!
+    # ```dart
+    # // If-statements:
+    # if (test) return; // <- LINT
+    # if (test) {
+    #   return; // <- OK
+    # }
+    # // If-expressions:
+    # Column(
+    #   children: [
+    #     if (test) Text('test'), // <- OK
+    #   ],
+    # );
+    # ```
+    always_put_control_body_on_new_line: true
+
+    # DO force required parameters to be declared first.
+    always_put_required_named_parameters_first: true
+
+    # DO force non-null parameters to be required.
+    always_require_non_null_named_parameters: true
+
+    # DON'T force all variables to be strongly typed.
+    # ```dart
+    # var a = 1; // <- OK
+    # int b = 2; // <- OK
+    # final c = 3; // <- OK
+    # final int d = 4; // <- OK
+    # ```
+    always_specify_types: false
+
+    # DO force overrides to be annotated with `@override`.
+    annotate_overrides: true
+
+    # DO allow boolean literals in conditional expressions.
+    # ```dart
+    # condition ? true : boolExpression // <- OK
+    # condition || boolExpression // <- OK
+    # condition ? false : boolExpression // <- OK
+    # !condition && boolExpression // <- OK
+    # condition ? boolExpression : true // <- OK
+    # !condition || boolExpression // <- OK
+    # condition ? boolExpression : false // <- OK
+    # condition && boolExpression // <- OK
+    # ```
+    avoid_bool_literals_in_conditional_expressions: false
+
+    # DO allow catches without on clauses.
+    # ```dart
+    # try {
+    #   // ...
+    # } catch (e) { // <- OK
+    #   // ...
+    # }
+    #
+    # try {
+    #   // ...
+    # } on Exception catch (e) { // <- OK
+    #   // ...
+    # }
+    # ```
+    avoid_catches_without_on_clauses: false
+
+    # DON'T catch errors with try-catch.
+    # `Result` should be used for error handling, and try-catch should be used
+    # for exception handling.
+    avoid_catching_errors: true
+
+    # DO avoid defining a class that contains only static members.
+    # Creating classes with the sole purpose of providing utility or otherwise
+    # static methods is discouraged. Dart allows functions to exist outside
+    # of classes for this very reason.
+    avoid_classes_with_only_static_members: true
+
+    # DO avoid to check if a type is `double` or `int`.
+    # Because JavaScript represents all numbers as doubles, this can lead to
+    # weird behaviour if we decide to target web in the future.
+    # Check if the number is a `num` instead.
+    # ```dart
+    # if (value is double) { ... } // <- LINT
+    # if (value is num) { ... } // <- OK
+    # double someNumber = 1.0; // <- OK
+    # ```
+    avoid_double_and_int_checks: true
+
+    # DON'T avoid escaping inner quotes by converting surrounding quotes.
+    # ```dart
+    # 'I\'m a string' // <- OK
+    # "I'm a string" // <- OK (but linted by `prefer_single_quotes`)
+    # ```
+    avoid_escaping_inner_quotes: false
+
+    # DO avoid field initialisers in const classes.
+    # Use getters instead.
+    # ```dart
+    # class MyClass {
+    #   const MyClass();
+    #   int get myField => 1; // <- OK
+    #   int myField = 1; // <- LINT
+    # }
+    # ```
+    avoid_field_initializers_in_const_classes: true
+
+    # DO avoid function parameters to be marked `final`.
+    # This makes things unnecessarily verbose.
+    avoid_final_parameters: true
+
+    # DO prefer normal for-loops over functional .forEach() loops.
+    # ```dart
+    # for (final s in strings) { ... } // <- OK
+    # strings.forEach((s) { ... }); // <- LINT
+    # ```
+    avoid_function_literals_in_foreach_calls: true
+
+    # DO avoid using `implements` on classes with an `operator ==` overload.
+    # Use inheritance (`extends`) instead.
+    avoid_implementing_value_types: true
+
+    # DON'T initialise variables to null. `= null` is redundant and not needed.
+    avoid_init_to_null: true
+
+    # DON'T allow integer literals that cannot be represented by JavaScript.
+    # I.e. integers that cannot be precisely represented as IEEE-754 doubles.
+    # This is to avoid weird behaviour when targeting web in the future.
+    # ```dart
+    # int a = 1; // <- OK
+    # int b = 9007199254740995; // <- LINT
+    # BigInt value = BigInt.parse('9007199254740995'); // <- OK
+    # ```
+    avoid_js_rounded_ints: true
+
+    # DON'T allow multiple declarations on a single line.
+    # ```dart
+    # int a = 1, b = 2; // <- LINT
+    #
+    # int a = 1;
+    # int b = 2; // <- OK
+    # ```
+    avoid_multiple_declarations_per_line: true
+
+    # DON'T check for null in custom == operators.
+    # As null is a special type, no class can be equivalent to it.
+    # Thus, it is redundant to check whether the other instance is null.
+    # ```dart
+    # @override
+    # bool operator ==(Object other) {
+    #   return other is MyClass // <- OK
+    #       && other.field == field;
+    # }
+    #
+    # @override
+    # bool operator ==(Object other) {
+    #   return other != null // <- LINT
+    #       && other is MyClass
+    #       && other.field == field;
+    # }
+    avoid_null_checks_in_equality_operators: true
+
+    # DO avoid overloading operator == and hashCode on classes
+    # not marked @immutable.
+    # If a class is not immutable, overloading operator == and hashCode can
+    # lead to unpredictable and undesirable behavior when used in collections.
+    # https://dart.dev/guides/language/effective-dart/design#avoid-defining-custom-equality-for-mutable-classes
+    avoid_equals_and_hash_code_on_mutable_classes: true
+
+    # DO avoid positional boolean parameters.
+    # Positional boolean parameters are a bad practice because they are very
+    # ambiguous. Using named boolean parameters is much more readable because
+    # it inherently describes what the boolean value represents.
+    # ```dart
+    # foo(bar: true, foo: false); // <- OK
+    # foo(true, false); // <- LINT
+    # ```
+    avoid_positional_boolean_parameters: false
+
+    # DO avoid private typedef functions used only once. Prefer inline function
+    # syntax.
+    avoid_private_typedef_functions: true
+
+    # DON'T allow passing an argument that matches the corresponding
+    # parameter's default value.
+    # ```dart
+    # void foo({int bar = 1}) { ... }
+    # foo(bar: 1); // <- LINT
+    # foo(bar: 2); // <- OK
+    # ```
+    avoid_redundant_argument_values: true
+
+    # DON'T allow renaming parameters of overridden methods.
+    # Methods that override another method, but do not have their own
+    # documentation comment, will inherit the overridden method's comment when
+    # dart doc produces documentation. If the inherited method contains the name
+    # of the parameter (in square brackets), then dart doc cannot link it correctly.
+    avoid_renaming_method_parameters: true
+
+    # DO avoid returning null from members whose return type is
+    # bool, double, int, or num.
+    # Functions that return primitive types such as bool, double, int, and num
+    # are generally expected to return non-nullable values. Thus, returning null
+    # where a primitive type was expected can lead to runtime exceptions.
+    avoid_returning_null: true
+
+    # DO avoid returning null for void.
+    # ```dart
+    # void foo() { return; } // <- OK
+    # void bar() { return null; } // <- LINT
+    # ```
+    avoid_returning_null_for_void: true
+
+    # DO avoid returning this just to enable a fluent interface.
+    # Dart has a cascade operator which allows method chaining universally.
+    # https://dart.dev/guides/language/effective-dart/design#avoid-returning-this-from-methods-just-to-enable-a-fluent-interface
+    avoid_returning_this: true
+
+    # DO avoid return types on setters.
+    # As setters do not return a value, declaring the return type of one is redundant.
+    # ```dart
+    # set foo(int value) { ... } // <- OK
+    # void set foo(int value) { ... } // <- LINT
+    avoid_return_types_on_setters: true
+
+    # DON'T allow setters without a corresponding getter.
+    avoid_setters_without_getters: true
+
+    # DO avoid shadowing type parameters.
+    # Shadowing type parameters can lead to confusing code.
+    # ```dart
+    # class A<T> {
+    #   void fn<T>() {} // <- LINT
+    # }
+    # class A<T> {
+    #   void fn<U>() {} // <- OK
+    # }
+    # ```
+    avoid_shadowing_type_parameters: true
+
+    # DO avoid single cascade in expression statements.
+    # ```dart
+    # foo..bar(); // <- LINT
+    # foo.bar(); // <- OK
+    # ```
+    avoid_single_cascade_in_expression_statements: true
+
+    # DO avoid annotating types for lambda function parameters.
+    # ```dart
+    # void foo(void Function(int) fn) { ... }
+    # foo((int i) => ...); // <- LINT
+    # foo((i) => ...); // <- OK
+    # ```
+    avoid_types_on_closure_parameters: true
+
+    # DO avoid wrapping widgets in unnecessary containers.
+    # Wrapping a widget in Container with no other parameters set has no effect
+    # and makes code needlessly more complex.
+    avoid_unnecessary_containers: true
+
+    # DO avoid unused parameters in constructors.
+    avoid_unused_constructor_parameters: true
+
+    # DO mark async functions as returning Future.
+    # When declaring an async method or function which does not return a value,
+    # declare that it returns Future<void> and not just void.
+    # An exception is made for top-level main functions, where the Future
+    # annotation can (and generally should) be dropped in favor of void.
+    # ```dart
+    # Future<void> foo() async { ... } // <- OK
+    # void foo() async { ... } // <- LINT
+    # ```
+    avoid_void_async: true
+
+    # DON'T allow using the `await` keyword on non-`Future`s.
+    await_only_futures: true
+
+    # DO force naming extensions using UpperCamelCase.
+    camel_case_extensions: true
+
+    # DO force naming types using UpperCamelCase.
+    camel_case_types: true
+
+    # DO force using the cascading style when successively invoking methods on
+    # the same reference.
+    # ```dart
+    # foo.bar();
+    # foo.baz(); // <- LINT
+    #
+    # foo
+    #   ..bar()
+    #   ..baz(); // <- OK
+    # ```
+    cascade_invocations: true
+
+    # DO allow to cast a nullable value to a non-nullable type.
+    # In some cases, it is necessary in order to reduce code complexity.
+    # ```dart
+    # int? foo;
+    # int baz = foo as int; // <- OK, but unsafe
+    # int aaa = foo!; // OK, but unsafe
+    #
+    # int bar = 123;
+    # int qux = bar as int; // <- OK
+    # int bbb = bar; // <- OK
+    # ```
+    cast_nullable_to_non_nullable: true
+
+    # DON'T bother about ordering of `show` imports.
+    # Who looks at imports anyway?
+    combinators_ordering: false
+
+    # Allow missing conditional imports.
+    # https://dart-lang.github.io/linter/lints/conditional_uri_does_not_exist.html
+    conditional_uri_does_not_exist: false
+
+    # DO force naming constants using lowerCamelCase.
+    constant_identifier_names: true
+
+    # DO force using curly braces for all flow control structures.
+    curly_braces_in_flow_control_structures: true
+
+    # Attach library doc comments (with ///) to library directives, rather than
+    # leaving them dangling near the top of a library.
+    # ```dart
+    # /// This is a library doc comment. // <- OK
+    # class Foo { ... }
+    #
+    # /// This is a library doc comment. // <- LINT
+    #
+    # class Foo { ... }
+    # ```
+    dangling_library_doc_comments: true
+
+    # DO apply @deprecated() consistently:
+    # if a class is deprecated, its constructors should also be deprecated.
+    # if a field is deprecated, the constructor parameter pointing to it
+    # should also be deprecated.
+    # if a constructor parameter pointing to a field is deprecated,
+    # the field should also be deprecated.
+    deprecated_consistency: true
+
+    # DON'T bother about ordering of import directives.
+    # Who looks at imports anyway?
+    directives_ordering: false
+
+    # DON'T allow using environment variables.
+    # They may only be used to separate debug and release builds.
+    # In this case, add an ignore comment.
+    do_not_use_environment: true
+
+    # DO avoid empty catch blocks.
+    empty_catches: true
+
+    # DO use ; instead of {} for empty constructor bodies.
+    empty_constructor_bodies: true
+
+    # DON'T allow using older dart versions that don't support null safety.
+    enable_null_safety: true
+
+    # Put a single newline at the end of file.
+    eol_at_end_of_file: true
+
+    # DO force defining case clauses for all constants in an enum-like class.
+    exhaustive_cases: true
+
+    # DO force source files to be named using snake_case.
+    file_names: true
+
+    # Use flutter style TODOs.
+    # ```dart
+    # // TODO(git-username): description // <- OK
+    # // TODO: whatever // <- LINT
+    # ```
+    flutter_style_todos: true
+
+    # DON'T allow importing implementation files from another package.
+    implementation_imports: true
+
+    # https://dart-lang.github.io/linter/lints/implicit_call_tearoffs.html
+    implicit_call_tearoffs: false
+
+    # DON'T force to join return with assignment when possible.
+    # ```dart
+    # MyClass foo() => _instance ??= MyClass(); // <- OK
+    # MyClass foo() {
+    #   if (_instance == null) {
+    #     _instance = MyClass();
+    #   }
+    #   return _instance; // <- OK
+    # }
+    join_return_with_assignment: false
+
+    # DO force multiline strings to start on a new line.
+    leading_newlines_in_multiline_strings: true
+
+    # https://dart-lang.github.io/linter/lints/library_annotations.html
+    library_annotations: false
+
+    # DO force library names to be named using snake_case.
+    library_names: true
+
+    # DO force library prefixes to be named using snake_case.
+    library_prefixes: true
+
+    # DO avoid using private types in public APIs.
+    library_private_types_in_public_api: true
+
+    # DON'T strictly enforce the 80 character limit.
+    lines_longer_than_80_chars: false
+
+    # DON'T force a whitespace between adjactent strings.
+    # This might break some valid code.
+    missing_whitespace_between_adjacent_strings: false
+
+    # DO allow default cases.
+    no_default_cases: false
+
+    # DO force identifier names to be named using lowerCamelCase.
+    non_constant_identifier_names: true
+
+    # DO avoid leading underscores for library prefixes.
+    no_leading_underscores_for_library_prefixes: true
+
+    # DO avoid leading underscores for local identifiers.
+    no_leading_underscores_for_local_identifiers: true
+
+    # DO avoid some useless operations.
+    # https://dart-lang.github.io/linter/lints/noop_primitive_operations.html
+    noop_primitive_operations: true
+
+    # DO avoid .toString() on runtime types because production obfuscation
+    # might change the result.
+    # ```dart
+    # void func(Whatever test) {
+    #   if (test.runtimeType.toString() == 'Whatever') { ... } // <- LINT
+    #   if (test is Whatever) { ... } // <- OK
+    # }
+    # ```
+    no_runtimeType_toString: true
+
+    # DON'T use null check on a potentially nullable type parameter.
+    # Given a generic type parameter T which has a nullable bound
+    # (e.g. the default bound of Object?), it is very easy to introduce
+    # erroneous null checks when working with a variable of type T?.
+    # Specifically, it is not uncommon to have T? x; and want to assert that
+    # x has been set to a valid value of type T. A common mistake is to do so
+    # using x!. This is almost always incorrect, since if T is a nullable type,
+    # x may validly hold null as a value of type T.
+    # ```dart
+    # T run<T>(T callback()) {
+    #   T? result;
+    #    (() { result = callback(); })();
+    #   return result!; // <- LINT
+    # }
+    #
+    # T run<T>(T callback()) {
+    #   T? result;
+    #    (() { result = callback(); })();
+    #   return result as T; // <- OK
+    # }
+    # ```
+    null_check_on_nullable_type_parameter: true
+
+    # DON'T allow passing null as an argument where a closure is expected.
+    null_closures: true
+
+    # DON'T redundantly type annotate initialized local variables.
+    # Local variables, especially in modern code where functions tend to be
+    # small, have very little scope. Omitting the type focuses the reader's
+    # attention on the more important name of the variable and its
+    # initialized value.
+    # ```dart
+    # void foo() {
+    #   List<List<Ingredient>> desserts = <List<Ingredient>>[]; // <- LINT
+    #   List<List<Ingredient>> desserts = []; // <- OK
+    #   var desserts = <List<Ingredient>>[]; // <- OK
+    # }
+    omit_local_variable_types: true
+
+    # DO allow defining a one-member abstract class, even when a simple function
+    # will do. This is useful for defining a common interface with a single
+    # function.
+    # ```dart
+    # abstract class Predicate {
+    #   bool test(item); // <- OK
+    # }
+    # typedef Predicate = bool Function(item); // <- OK
+    # ```
+    one_member_abstracts: false
+
+    # Only allow classes that inherit from Exceptions to be thrown.
+    # This rule also allows `Error`s to be thrown, but this is not recommended.
+    # Use the `Result` class instead.
+    only_throw_errors: true
+
+    # DON'T allow overriding fields.
+    overridden_fields: true
+
+    # DON'T force to write docs for everything.
+    package_api_docs: false
+    public_member_api_docs: false
+
+    # DO prefix library names with the package name and a dot-separated path.
+    package_prefixed_library_names: true
+
+    # DON'T assign new values to parameters of methods or functions.
+    # Assigning new values to parameters is generally a bad practice unless an
+    # operator such as ??= is used. Otherwise, arbitrarily reassigning
+    # parameters is usually a mistake.
+    parameter_assignments: true
+
+    # DO use adjacent strings to concatenate string literals.
+    # ```dart
+    # String foo() {
+    #   return 'foo' 'bar'; // <- OK
+    #   return 'foo' + 'bar'; // <- LINT
+    # }
+    # ```
+    prefer_adjacent_string_concatenation: true
+
+    # DO not force to put asserts in initializer lists.
+    prefer_asserts_in_initializer_lists: false
+
+    # DO force to use a message when an assert is used.
+    # This makes the debugging easier.
+    prefer_asserts_with_message: true
+
+    # DO force to use collection literals when possible.
+    # ```dart
+    # var points = List(); // <- LINT
+    # var points = []; // <- OK
+    # var addresses = Map<String, String>(); // <- LINT
+    # var addresses = <String, String>{}; // <- OK
+    # var uniqueNames = Set<String>(); // <- LINT
+    # var uniqueNames = <String>{}; // <- OK
+    # var ids = LinkedHashSet<int>(); // <- LINT
+    # var ids = <int>{}; // <- OK
+    # var coordinates = LinkedHashMap<int, int>(); // <- LINT
+    # var coordinates = <int, int>{}; // <- OK
+    # ```
+    prefer_collection_literals: true
+
+    # DO force to use ??= over testing for null.
+    # ```dart
+    # if (foo == null) { foo = 42; } // <- LINT
+    # foo ??= 42; // <- OK
+    # ```
+    prefer_conditional_assignment: true
+
+    # DO force to use const with constant constructors.
+    prefer_const_constructors: true
+
+    # DO force to use const constructors in classes marked @immutable.
+    prefer_const_constructors_in_immutables: true
+
+    # DO force to put `const` in the declaration rather than the value.
+    # ```dart
+    # final foo = const Foo(); // <- LINT
+    # const foo = Foo(); // <- OK
+    # ```
+    prefer_const_declarations: true
+
+    # DO force using for instantiating list, map and set literals used as
+    # parameters in immutable class instantiations.
+    # https://dart-lang.github.io/linter/lints/prefer_const_literals_to_create_immutables.html
+    prefer_const_literals_to_create_immutables: true
+
+    # DO force using constructors instead of static methods to create instances.
+    # In most cases, it makes more sense to use a named constructor rather than
+    # a static method because it makes instantiation clearer.
+    # ```dart
+    # class Foo {
+    #   Foo.create(); // <- OK
+    #   static Foo create() => Foo(); // <- LINT
+    # }
+    prefer_constructors_over_static_methods: true
+
+    # Prefer using `contains` over `indexOf` when checking for the presence of
+    # an element in a collection.
+    prefer_contains: true
+
+    # DO force using single quotes for strings.
+    prefer_double_quotes: false
+    prefer_single_quotes: true
+
+    # DO force using `=` instead of `:` to separate a named parameter from
+    # its default value.
+    # ```dart
+    # m({a: 1}) // <- LINT
+    # m({a = 1}) // <- OK
+    # ```
+    prefer_equal_for_default_values: true
+
+    # DO consider using => for short members whose body is a single return
+    # statement.
+    # ```dart
+    # get width {
+    #   return right - left; // <- LINT
+    # }
+    # get width => right - left; // <- OK
+    # ```
+    prefer_expression_function_bodies: false
+
+    # DO force declaring private fields as final if they are not reassigned
+    # slater in the library. Declaring fields as final when possible is a good
+    # practice because it helps avoid accidental reassignments and allows the
+    # compiler to do optimizations.
+    # ```dart
+    # class BadImmutable {
+    #   var _label = 'hola mundo! BadImmutable'; // LINT
+    #   var label = 'hola mundo! BadImmutable'; // OK
+    # }
+    # ```
+    prefer_final_fields: true
+
+    # DO force using `final` in a for-in loop if the variable is not reassigned
+    # in the loop body.
+    prefer_final_in_for_each: true
+
+    # DO force using `final` for variable declarations if they are not
+    # reassigned later in the method.
+    prefer_final_locals: true
+
+    # DON'T force parameters to be final if they are not reassigned later in
+    # the method.
+    prefer_final_parameters: false
+
+    # DON'T force to use .forEach() instead of a for-in loop. A for-in loop
+    # is more readable.
+    prefer_foreach: false
+
+    # DO force using for-loops when building maps from iterables.
+    # Using 'for' elements brings several benefits including:
+    # - Performance
+    # - Flexibility
+    # - Readability
+    # - Improved type inference
+    # - Improved interaction with null safety
+    prefer_for_elements_to_map_fromIterable: true
+
+    # DO force to use a function declaration to bind a function to a name.
+    # As Dart allows local function declarations, it is a good practice to
+    # use them in the place of function literals.
+    # ```dart
+    # void main() {
+    #   var localFunction = () { // <- LINT
+    #     ...
+    #   };
+    #   localFunction() { // <- OK
+    #     ...
+    #   }
+    # }
+    # ```
+    prefer_function_declarations_over_variables: true
+
+    # DO force to use generic function type aliases.
+    # With the introduction of generic functions, function type aliases
+    # (typedef void F()) couldn't express all of the possible kinds of
+    # parameterization that users might want to express. Generic function type
+    # aliases (typedef F = void Function()) fixed that issue.
+    #
+    # For consistency and readability reasons, it's better to only use one
+    # syntax and thus prefer generic function type aliases.
+    #
+    # ```dart
+    # typedef void F(); // <- LINT
+    # typedef F = void Function(); // <- OK
+    # ```
+    prefer_generic_function_type_aliases: true
+
+    # Do force using if-expressions when building collections.
+    # ```dart
+    # var list = ['a', 'b', condition ? 'c' : null].where((e) => e != null).toList(); // <- LINT
+    # var list = ['a', 'b', if (condition) 'c']; // <- OK
+    # ```
+    prefer_if_elements_to_conditional_expressions: true
+
+    # DO force using if-null operator `??` instead of ternary-is-null:
+    # ```dart
+    # a == null ? a : b; // <- LINT
+    # a ?? b; // <- OK
+    # ```
+    prefer_if_null_operators: true
+
+    # DO force using initializing formals when possible.
+    # Using initializing formals when possible makes your code more terse.
+    # ```dart
+    # Point(num x, num y) { // <- LINT
+    #   this.x = x;
+    #   this.y = y;
+    # }
+    # Point(this.x, this.y); // <- OK
+    # ```
+    prefer_initializing_formals: true
+
+    # DO force declaring elements in list literals inline, rather than using
+    # add and addAll methods where possible.
+    # ```dart
+    # var l = ['a']..add('b')..add('c'); // <- LINT
+    # var l2 = ['a']..addAll(['b', 'c']); // <- LINT
+    # var l = ['a', 'b', 'c']; // <- OK
+    # var l2 = ['a', 'b', 'c']; // <- OK
+    # ```
+    prefer_inlined_adds: true
+
+    # DO force using string interpolation instead of string concatenation.
+    # ```dart
+    # var name = 'Bob';
+    # var message = 'Hello, ' + name + '!'; // <- LINT
+    # var message = 'Hello, $name!'; // <- OK
+    # ```
+    prefer_interpolation_to_compose_strings: true
+
+    # DON'T force using int literals. Sometimes it's more clear to use
+    # double literals.
+    # ```dart
+    # double a = 1; // <- OK
+    # double b = 1.0; // <- OK
+    # ```
+    prefer_int_literals: false
+
+    # DON'T use length to see if a collection is empty.
+    # The Iterable contract does not require that a collection know its length
+    # or be able to provide it in constant time. Calling length just to see if
+    # the collection contains anything can be painfully slow.
+    # Instead, there are faster and more readable getters: isEmpty and
+    # isNotEmpty. Use the one that doesn't require you to negate the result.
+    # ```dart
+    # if (list.length == 0) { ... } // <- LINT
+    # if (list.isEmpty) { ... } // <- OK
+    # if (list.length != 0) { ... } // <- LINT
+    # if (list.isNotEmpty) { ... } // <- OK
+    # ```
+    prefer_is_empty: true
+    prefer_is_not_empty: true
+
+    # DO force using the `is!` operator over negating an `is` expression.
+    # ```dart
+    # if (!(foo is Foo)) { ... } // <- LINT
+    # if (foo is! Foo) { ... } // <- OK
+    # ```
+    prefer_is_not_operator: true
+
+    # DO force using iterable.whereType<T>() over iterable.where((e) => e is T).
+    # ```dart
+    # iterable.where((e) => e is MyClass); // <- LINT
+    # iterable.whereType<MyClass>(); // <- OK
+    # ```
+    prefer_iterable_whereType: true
+
+    # DO force to use mixins.
+    # Dart 2.1 introduced a new syntax for mixins that provides a safe way for
+    # a mixin to invoke inherited members using super. The new style of mixins
+    # should always be used for types that are to be mixed in. As a result,
+    # this lint will flag any uses of a class in a with clause.
+    # ```dart
+    # class A {}
+    # class B extends Object with A {} // <- LINT
+    # mixin M {}
+    # class C with M {} // <- OK
+    # ```
+    prefer_mixin: true
+
+    # Do force using null aware operators instead of null checks in
+    # conditional expressions.
+    # ```dart
+    # v = a == null ? null : a.b;
+    # v = a?.b;
+    # if (func != null) func(); // <- LINT
+    # func?.call(); // <- OK
+    # ```
+    prefer_null_aware_operators: true
+    prefer_null_aware_method_calls: true
+
+    # DO use spread collections when possible.
+    # Collection literals are excellent when you want to create a new
+    # collection out of individual items. But, when existing items are already
+    # stored in another collection, spread collection syntax leads to
+    # simpler code.
+    prefer_spread_collections: true
+
+    # DO force specifying a type annotation for uninitialized variables and
+    # class fields. Forgoing type annotations for uninitialized variables is a
+    # bad practice because you may accidentally assign them to a type that you
+    # didn't originally intend to.
+    # ```dart
+    # var a; // <- LINT
+    # int a; // <- OK
+    # ```
+    prefer_typing_uninitialized_variables: true
+
+    # DO force to write a depreciation comment when using @deprecated.
+    provide_deprecation_message: true
+
+    # DON'T allow recursive getters.
+    recursive_getters: true
+
+    # DO always require trailing commas when formatting collections and
+    # function arguments, unless it fits on one line.
+    # ```dart
+    # var list = [1, 2, 3]; // <- OK
+    # var list = [1, 2, 3,]; // <- OK
+    # var list = [
+    #   1,
+    #   2,
+    #   3 // <- LINT
+    # ];
+    # var list = [
+    #   1,
+    #   2,
+    #   3, // <- OK
+    # ];
+    # ```
+    require_trailing_commas: true
+
+    # DO force usage of SizedBox to add whitespace to a layout when relevant.
+    # A Container is a heavier Widget than a SizedBox, and as bonus,
+    # SizedBox has a const constructor.
+    sized_box_for_whitespace: true
+
+    # DO force usage of SizedBox.shrink() and SizedBox.expand() constructors.
+    # The SizedBox.shrink(...) and SizedBox.expand(...) constructors should be
+    # used instead of the more general SizedBox(...) constructor when the named
+    # constructors capture the intent of the code more succinctly.
+    # ```dart
+    # Widget buildLogo() {
+    #   return SizedBox(
+    #     height: 0, // <- LINT
+    #     width: 0, // <- LINT
+    #     child: const MyLogo(),
+    #   );
+    # }
+    # Widget buildLogo() {
+    #   return SizedBox.shrink( // <- OK
+    #     child: const MyLogo(),
+    #   );
+    # }
+    # Widget buildLogo() {
+    #   return SizedBox(
+    #     height: double.infinity, // <- LINT
+    #     width: double.infinity, // <- LINT
+    #     child: const MyLogo(),
+    #   );
+    # }
+    # Widget buildLogo() {
+    #   return SizedBox.expand( // <- OK
+    #     child: const MyLogo(),
+    #   );
+    # }
+    # ```
+    sized_box_shrink_expand: true
+
+    # DO force using /// for doc comments.
+    # Although Dart supports two syntaxes of doc comments (/// and /**),
+    # we prefer using /// for doc comments.
+    slash_for_doc_comments: true
+
+    # DO force placing the child property last when constructing a widget.
+    sort_child_properties_last: true
+
+    # DO force placing the constructors first (even before the class fields)
+    # when defining a class.
+    sort_constructors_first: true
+
+    # DO force placing unnamed constructor declarations before named
+    # constructor declarations.
+    sort_unnamed_constructors_first: true
+
+    # https://dart-lang.github.io/linter/lints/tighten_type_of_initializing_formals.html
+    tighten_type_of_initializing_formals: false
+
+    # DO force annotating types to avoid dynamic types.
+    type_annotate_public_apis: true
+
+    # DON'T allow unnecessary type annotation for initializing formals.
+    # ```dart
+    # class Foo {
+    #   Foo(String this.bar); // <- LINT
+    #   Foo(this.bar); // <- OK
+    #   String bar;
+    # }
+    # ```
+    type_init_formals: true
+
+    # DO force using `await` on async functions or functions that return Future.
+    # It's easy to forget await in async methods as naming conventions usually
+    # don't tell us if a method is sync or async (except for some in dart:io).
+    # When you really do want to start a fire-and-forget Future, the recommended
+    # way is to use unawaited from dart:async.
+    #
+    # ```dart
+    # Future<void> doSomething() async => ...;
+    #
+    # void main() async {
+    #   doSomething(); // <- LINT
+    # }
+    #
+    # void main() async {
+    #   await doSomething(); // <- OK
+    #   unawaited(doSomething()); // <- OK, explicitly-ignored fire-and-forget.
+    # }
+    # ```
+    unawaited_futures: true
+
+    # DO avoid returning an awaited expression when the expression type is
+    # assignable to the function's return type.
+    # ```dart
+    # Future<int> future;
+    # Future<int> f1() async => await future;
+    # Future<int> f2() async {
+    #   return await future; // <- LINT
+    # }
+    # Future<int> f2() {
+    #   return future; // <- OK
+    # }
+    unnecessary_await_in_return: true
+
+    # DO avoid using unnecessary braces in string interpolations.
+    # ```dart
+    # var name = 'Bob';
+    # var message = 'Hello, $name!'; // <- OK
+    # var message = 'Hello, ${name}!'; // <- LINT
+    unnecessary_brace_in_string_interps: true
+
+    # DO avoid using unnecessary const keyword.
+    unnecessary_const: true
+
+    # DO avoid using unnecessary .new constructor.
+    unnecessary_constructor_name: true
+
+    # DON'T avoid locals from being declared final.
+    unnecessary_final: false
+
+    # DO avoid using unnecessary new keyword.
+    unnecessary_new: true
+
+    # DO avoid null in null-aware assignment.
+    # Using null on the right-hand side of a null-aware assignment
+    # effectively makes the assignment redundant.
+    # ```dart
+    # var x;
+    # x ??= null; // <- LINT
+    # x ??= 1; // <- OK
+    # ```
+    unnecessary_null_aware_assignments: true
+
+    # DO avoid using null as an operand in if null operators.
+    # Using null in an if null operator is redundant, regardless of which side
+    # null is used on.
+    # ```dart
+    # var x = a ?? null; // <- LINT
+    # var y = null ?? 1; // <- LINT
+    # var x = a ?? 1; // <- OK
+    # ```
+    unnecessary_null_in_if_null_operators: true
+
+    # DO only allow getters and setters when they actually make sense.
+    # DON'T allow getters and setters that simply wrap around a field.
+    unnecessary_getters_setters: true
+
+    # DON'T allow a lambda when a tear-off will do.
+    unnecessary_lambdas: true
+
+    # DO avoid using unnecessary late modifier.
+    unnecessary_late: true
+
+    # DO avoid using a nullable type for a final variable initialized with a
+    # non-nullable value.
+    # ```dart
+    # final int? i = 1; // <- LINT
+    # final int i = 1; // <- OK
+    # ```
+    unnecessary_nullable_for_final_variable_declarations: true
+
+    # https://dart-lang.github.io/linter/lints/unnecessary_null_aware_operator_on_extension_on_nullable.html
+    unnecessary_null_aware_operator_on_extension_on_nullable: false
+
+    # DON'T apply a null check when a nullable value is accepted.
+    # ```dart
+    # void f(int? i);
+    # void m() {
+    #   int? j;
+    #   f(j!); // <- LINT
+    #   f(j); // <- OK
+    # }
+    unnecessary_null_checks: true
+
+    # DON'T allow overriding a method to do a super method invocation with
+    # same parameters.
+    # ```dart
+    # class A extends B {
+    #   @override
+    #   void foo() {
+    #     super.foo(); // <- LINT
+    #   }
+    # }
+    #
+    # class A extends B {
+    #   @override
+    #   void foo() {
+    #     doSomethingElse(); // <- OK
+    #   }
+    # }
+    # ```
+    unnecessary_overrides: true
+
+    # DO avoid using unnecessary parentheses.
+    # TODO: test how well this works practically.
+    unnecessary_parenthesis: true
+
+    # DO avoid using raw strings when not needed.
+    unnecessary_raw_strings: true
+
+    # DO avoid unnecessary escapes in strings.
+    unnecessary_string_escapes: true
+
+    # DO avoid using unnecessary string interpolations.
+    # ```dart
+    # var name = 'Bob';
+    # var message = '$name' // <- LINT
+    unnecessary_string_interpolations: true
+
+    # DO avoid using unnecessary this.
+    unnecessary_this: true
+
+    # DO avoid using unnecessary .toList() in spreads.
+    unnecessary_to_list_in_spreads: true
+
+    # DO avoid dead code that is not reachable from main().
+    unreachable_from_main: true
+
+    # DO force using ColoredBox when Container has only a Color.
+    # A Container is a heavier Widget than a ColoredBox, and as bonus,
+    # ColoredBox has a const constructor.
+    #
+    # ```dart
+    # Widget buildArea() {
+    #   return Container( // <- LINT
+    #     color: Colors.blue,
+    #     child: const Text('hello'),
+    #   );
+    # }
+    #
+    # Widget buildArea() {
+    #   return const ColoredBox( // <- OK
+    #     color: Colors.blue,
+    #     child: Text('hello'),
+    #   );
+    # }
+    # ```
+    use_colored_box: true
+
+    # DO force using DecoratedBox when Container has only a BoxDecoration.
+    # A Container is a heavier Widget than a DecoratedBox, and as bonus,
+    # DecoratedBox has a const constructor.
+    #
+    # ```dart
+    # Widget buildArea() {
+    #   return Container( // <- LINT
+    #     decoration: const BoxDecoration(color: Colors.blue),
+    #     child: const Text('hello'),
+    #   );
+    # }
+    #
+    # Widget buildArea() {
+    #   return const DecoratedBox( // <- OK
+    #     decoration: BoxDecoration(color: Colors.blue),
+    #     child: Text('hello'),
+    #   );
+    # }
+    # ```
+    use_decorated_box: true
+
+    # DO avoid classes that look like enums.
+    # https://dart-lang.github.io/linter/lints/use_enums.html
+    use_enums: true
+
+    # DO force to use 8 digit hex values for colors.
+    use_full_hex_values_for_flutter_colors: true
+
+    # DO force using generic function type syntax for parameters.
+    # ```dart
+    # Iterable<T> where(bool predicate(T element)) {} // <- LINT
+    # Iterable<T> where(bool Function(T) predicate) {} // <- OK
+    # ```
+    use_function_type_syntax_for_parameters: true
+
+    # DO force using null aware operators when checking `== true`
+    # and `== false`. This makes it more clear that the value is
+    # a nullable boolean.
+    # ```dart
+    # if (nullableBool == true) {} // <- LINT
+    # if (nullableBool ?? false) {} // <- OK
+    # if (nullableBool != false) {} // <- LINT
+    # if (nullableBool ?? true) {} // <- OK
+    # ```
+    use_if_null_to_convert_nulls_to_bools: true
+
+    # DO force using .isEven() and .isOdd() instead of checking % 2.
+    use_is_even_rather_than_modulo: true
+
+    # DO force using `late` over a non-nullable type for fields that are not
+    # expected to be null.
+    # TODO: test how well this works practically.
+    use_late_for_private_fields_and_variables: true
+
+    # DO force to use predefined named constants.
+    # ```dart
+    # const Color(0xFF000000); // <- LINT
+    # Colors.black; // <- OK
+    # const Duration(seconds: 0); // <- LINT
+    # Duration.zero; // <- OK
+    # ```
+    use_named_constants: true
+
+    # DO force the usage of the `rethrow` keyword when rethrowing an exception.
+    # ```dart
+    # try {
+    #   // ...
+    # } catch (e) {
+    #   if (canHandle(e)) {
+    #     throw e; // <- LINT
+    #     rethrow; // <- OK
+    #   }
+    #   // ...
+    # }
+    # ```
+    use_rethrow_when_possible: true
+
+    # DON'T force to use raw strings just to escape backslashes or dollar signs.
+    # ```dart
+    # r'$ \'; // <- OK
+    # '\$ \\'; // <- OK
+    use_raw_strings: false
+
+    # DO force to use setters to change properties (when the setter exists).
+    use_setters_to_change_properties: true
+
+    # DO prefer to use StringBuffer for concatenating many strings.
+    # ```dart
+    # var s = '';
+    # for (var i = 0; i < 100; i++) {
+    #   s += 'a'; // <- LINT
+    # }
+    #
+    # var b = StringBuffer();
+    # for (var i = 0; i < 100; i++) {
+    #   b.write('a'); // <- OK
+    # }
+    # var s = b.toString();
+    # ```
+    use_string_buffers: true
+
+    # https://dart-lang.github.io/linter/lints/use_string_in_part_of_directives.html
+    use_string_in_part_of_directives: false
+
+    # DO force using super-initializer parameters where possible.
+    #
+    # "Forwarding constructor"s, that do nothing except forward parameters
+    # to their superclass constructors should take advantage of
+    # super-initializer parameters rather than repeating the names of
+    # parameters when passing them to the superclass constructors.
+    # This makes the code more concise and easier to read and maintain.
+    #
+    # ```dart
+    # class A {
+    #   A({int? x, int? y});
+    # }
+    # class B extends A {
+    #   B({int? x, int? y}) : super(x: x, y: y); // <- LINT
+    #   B({super.x, super.y}); // <- OK
+    # }
+    # ```
+    use_super_parameters: true
+
+    # https://dart-lang.github.io/linter/lints/use_test_throws_matchers.html
+    use_test_throws_matchers: false
+
+    # https://dart-lang.github.io/linter/lints/use_to_and_as_if_applicable.html
+    use_to_and_as_if_applicable: true
+
+    # DON'T allow to assign to void.
+    void_checks: true
+
+    # ========================== #
+    #        PUB    RULES        #
+    # ========================== #
+
+    # DO depend on referenced packages.
+    # When importing a package, add a dependency on it to pubspec.yaml.
+    # https://dart-lang.github.io/linter/lints/depend_on_referenced_packages.html
+    depend_on_referenced_packages: false
+
+    # DO force to use snake_case for package names in pubspec.yaml.
+    package_names: true
+
+    # DO force to use safe urls in pubspec.yaml.
+    # https://dart-lang.github.io/linter/lints/secure_pubspec_urls.html
+    secure_pubspec_urls: true
+
+    # DON'T force to order the pub dependencies. Who cares about alphabetical
+    # order anyway?
+    sort_pub_dependencies: false
